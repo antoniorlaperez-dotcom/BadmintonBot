@@ -56,15 +56,10 @@ def main(playright: Playwright) -> None:
         clear.click()
 
     links = []
-    first = page.locator("a").filter(has_text="Weekly Flyer - Valid Thursday").first
-    if (first.is_visible()):
-        links.append(first)
-        child = page.locator("a").filter(has_text="Weekly Flyer - Valid Thursday").n(1)
-        i = 2
-        while child.is_visible():
-            links.append(child)
-            child = page.locator("a").filter(has_text="Weekly Flyer - Valid Thursday").n(i)
-            i += 1    
+    cards = page.locator("a[href*='/item/']")
+    cards.first.wait_for()
+    for card in cards.all(): 
+        links.append(card.get_attribute("href"))
     print(len(links))
     context.close()
     browser.close()
